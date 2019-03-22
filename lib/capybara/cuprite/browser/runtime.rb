@@ -83,10 +83,12 @@ module Capybara::Cuprite
         rescue BrowserError => e
           case e.message
           when "No node with given id found", "Could not find node with given id", "Cannot find context with specified id"
-            sleep 0.1
+            sleep 0.5
             attempts += 1
+            old_context = options[:executionContextId]
             options = options.merge(executionContextId: execution_context_id)
-            retry if attempts <= 3
+            puts "Context #{old_context} doesn't exist anymore and page is changing, new context is #{options[:executionContextId]}"
+            retry if attempts <= 5
           end
         end
       end
